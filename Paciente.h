@@ -24,12 +24,11 @@ public:
     string getNombre();
     int getEdad();
     string getID();
-    int getCita(int numeroCita);
+    void getCita(int numeroCita);
 
     //setters
     void setNombre(const string& nombre_);
     void setEdad(int edad_);
-    void setID();
 
     //Metodos especificos
     void agregarCita(CitaMedica cita);

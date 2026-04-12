@@ -3,6 +3,9 @@
 #include "Paciente.h"
 using namespace std;
 
+//funciones
+
+
 int main() {
 //prueba de metodos con pacientes
     vector<Paciente> consultorio1;
@@ -26,4 +29,7 @@ int main() {
         cout << endl;
     }
 
+    consultorio1.at(1).getCita(1);
+    consultorio1.at(1).getCita(0);
+    consultorio1.at(2).getCita(0);
 }

@@ -28,6 +28,9 @@ public:
     void setFecha(const year_month_day& fecha);
     void setMotivo(const string& motivo);
 
+    //funcion especial
+    void mostrar();
+
 
 };
 

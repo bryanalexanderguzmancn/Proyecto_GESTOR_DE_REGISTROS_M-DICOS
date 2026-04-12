@@ -40,3 +40,7 @@ void CitaMedica::setFecha(const year_month_day &fecha) {
     } else {fechaIngreso = fecha;}
 }
 
+void CitaMedica::mostrar() {
+    cout<<"Fecha: "<<getFechaIngreso()<<endl;
+    cout<<"Motivo: "<<getMotivo()<<endl;
+}

@@ -34,6 +34,23 @@ string Paciente::getID() {
     return ID;
 }
 
+void Paciente::getCita(int numeroCita_) {
+    if (numeroCitas > 0) {
+        numeroCita_--;
+        if (numeroCita_ < 0 or numeroCita_>numeroCitas) { /*no admite numeros negativos
+                                                            o que sean mayores al numero de citas ligadas al paciente*/
+            cout<<"\nNumero de cita invalido"<<endl;
+        }
+        else {
+            cout<<"Paciente: "<<nombre<<" ("<<ID<<")"<<endl;
+            citas.at(numeroCita_).mostrar();
+        }
+    }
+    else {
+        cout<<"\nEl paciente no tiene citas registradas"<<endl;
+    }
+}
+
 //Setters
 void Paciente::setNombre(const string& nombre_) {
     if (nombre_.empty()) { //evita que el nuevo nombre este vacio
