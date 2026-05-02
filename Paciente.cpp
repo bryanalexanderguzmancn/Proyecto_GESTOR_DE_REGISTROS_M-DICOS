@@ -6,20 +6,32 @@
 #include "CitaMedica.h" //llama a la clase para la composicion
 #include <iostream>
 #include <random>
+#include <unordered_set>
 using namespace std;
+
+namespace {
+    string generarId() {
+        static mt19937_64 rng(random_device{}());
+        uniform_int_distribution<unsigned long long> dist;
+
+        stringstream numero; //transforma el numero de id
+        // Convierte el número a hexadecimal y rellena con ceros a la izquierda
+        numero << hex << setw(10) << setfill('0') << dist(rng);
+
+        return numero.str();
+    }
+}
 
 
 
 //Inicializa los valores de la clase
-Paciente::Paciente(string nombre_, int edad_) {
-    nombre = nombre_;
-    edad = edad_;
+Paciente::Paciente(string nombre, int edad, long long numeroCelular) {
+    this->nombre = nombre;
+    this->edad = edad;
+    this->numeroCelular=numeroCelular;
     numeroCitas=0;
-
-    srand(time(NULL));
-    int v1 = rand();
-    string nomb = nombre;
-    ID=to_string(v1+edad+nomb[1]+nomb[2]+nomb[3]); //crea ids distintos segun el nombre
+    citas.empty();
+    ID = generarId();
 }
 
 //Getters
@@ -34,16 +46,16 @@ string Paciente::getID() {
     return ID;
 }
 
-void Paciente::getCita(int numeroCita_) {
+void Paciente::getCita(int numeroCita) {
     if (numeroCitas > 0) {
-        numeroCita_--;
-        if (numeroCita_ < 0 or numeroCita_>numeroCitas) { /*no admite numeros negativos
+        numeroCita--;
+        if (numeroCita < 0 or numeroCita>numeroCitas) { /*no admite numeros negativos
                                                             o que sean mayores al numero de citas ligadas al paciente*/
             cout<<"\nNumero de cita invalido"<<endl;
         }
         else {
             cout<<"Paciente: "<<nombre<<" ("<<ID<<")"<<endl;
-            citas.at(numeroCita_).mostrar();
+            citas.at(numeroCita).mostrar();
         }
     }
     else {
@@ -52,10 +64,10 @@ void Paciente::getCita(int numeroCita_) {
 }
 
 //Setters
-void Paciente::setNombre(const string& nombre_) {
-    if (nombre_.empty()) { //evita que el nuevo nombre este vacio
+void Paciente::setNombre(string nombre) {
+    if (nombre.empty()) { //evita que el nuevo nombre este vacio
         cout<<"Error. Ingresa un nombre valido"<<endl;
-    } else {nombre = nombre_;}
+    } else this->nombre = nombre;
 }
 void Paciente::setEdad(int edad_) {
     if (edad_ < 0 or edad_ > 120) { //imposibilita registrar edades negativas o inalcanzables
@@ -67,6 +79,10 @@ void Paciente::setEdad(int edad_) {
 //     char nomb[50]= nombre;
 //     ID=digitos+nomb[0];
 // }
+
+void Paciente::setNumero(long long telefono) {
+    numeroCelular=telefono;
+}
 
 //Metodos especificos
 void Paciente::agregarCita(CitaMedica nuevaCita) {
@@ -85,6 +101,11 @@ void Paciente::mostrar(){
     } else {
         cout<<"No hay citas medicas registradas"<<endl;
     }
+}
 
+void Paciente::cancelarCita(int indice) {
+    citas.erase(citas.begin()+indice);
+    cout<<"La cita "<<indice<<"ha sido eliminada"<<endl;
+    numeroCitas--;
 }
 

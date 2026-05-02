@@ -14,11 +14,16 @@ private:
     string nombre;
     int edad;
     string ID;
+
+    //datos personales extras
+    int numeroCelular;
+
+
     vector<CitaMedica> citas;
     int numeroCitas;
 
 public:
-    Paciente(string nombre_, int edad_);
+    Paciente(string nombre, int edad, long long numeroCelular);
 
     //getters
     string getNombre();
@@ -27,12 +32,16 @@ public:
     void getCita(int numeroCita);
 
     //setters
-    void setNombre(const string& nombre_);
-    void setEdad(int edad_);
+    void setNombre(string nombre);
+    void setEdad(int edad);
+    void setNumero(long long telefono);
 
     //Metodos especificos
-    void agregarCita(CitaMedica cita);
+    void agregarCita(CitaMedica nuevaCita);
     void mostrar();
+
+    //metodos experimentales
+    void cancelarCita(int indice);
 };
 
 
