@@ -29,6 +29,8 @@ public:
     string getNombre();
     int getEdad();
     string getID();
+
+    int getNumeroCitas();
     void getCita(int numeroCita);
 
     //setters

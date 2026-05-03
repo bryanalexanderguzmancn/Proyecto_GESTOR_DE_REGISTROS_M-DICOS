@@ -46,6 +46,10 @@ string Paciente::getID() {
     return ID;
 }
 
+int Paciente::getNumeroCitas() {
+    return numeroCitas;
+}
+
 void Paciente::getCita(int numeroCita) {
     if (numeroCitas > 0) {
         numeroCita--;
