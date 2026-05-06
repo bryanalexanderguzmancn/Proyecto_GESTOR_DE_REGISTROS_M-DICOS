@@ -5,6 +5,7 @@
 #ifndef PROYECTOGESTORMEDICO_PACIENTE_H
 #define PROYECTOGESTORMEDICO_PACIENTE_H
 #include <string>
+#include <vector>
 #include "CitaMedica.h"
 using namespace std;
 
@@ -16,34 +17,36 @@ private:
     string ID;
 
     //datos personales extras
-    int numeroCelular;
+    long long numeroCelular;
 
 
     vector<CitaMedica> citas;
-    int numeroCitas;
 
 public:
-    Paciente(string nombre, int edad, long long numeroCelular);
+    Paciente(const string& nombre, int edad, long long numeroCelular);
 
     //getters
-    string getNombre();
-    int getEdad();
-    string getID();
+    string getNombre() const;
+    int getEdad() const;
+    string getID() const;
+    long long getNumero() const;
 
-    int getNumeroCitas();
-    void getCita(int numeroCita);
+    int getNumeroCitas() const;
+    void mostrarCita(int numeroCita) const;
+    void mostrarCitas() const;
 
     //setters
-    void setNombre(string nombre);
+    void setNombre(const string& nombre);
     void setEdad(int edad);
     void setNumero(long long telefono);
 
     //Metodos especificos
-    void agregarCita(CitaMedica nuevaCita);
-    void mostrar();
+    void agregarCita(const CitaMedica& nuevaCita);
+    void mostrar() const;
 
     //metodos experimentales
-    void cancelarCita(int indice);
+    void cancelarCita(int numeroCita);
+    void cambiarEstadoCita(int numeroCita, int nuevoEstado);
 };
 
 

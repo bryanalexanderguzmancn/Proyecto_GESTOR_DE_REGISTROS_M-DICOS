@@ -6,6 +6,7 @@
 #define PROYECTOGESTORMEDICO_CITAMEDICA_H
 #include <iostream>
 #include <chrono>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -25,13 +26,13 @@ private:
      */
 
 public:
-    CitaMedica(year_month_day fecha, const string& motivo);
-    ~CitaMedica();
+    CitaMedica(const year_month_day& fecha, const string& motivo);
+
 
     //getters
-    year_month_day getFechaIngreso();
-    string getMotivo();
-    int getEstado();
+    year_month_day getFechaIngreso() const;
+    string getMotivo() const;
+    int getEstado() const;
 
     //setters
     void setFecha(const year_month_day& fecha);
@@ -39,7 +40,7 @@ public:
     void setEstado (int estado);
 
     //funcion especial
-    void mostrar();
+    void mostrar() const;
 
 
 };

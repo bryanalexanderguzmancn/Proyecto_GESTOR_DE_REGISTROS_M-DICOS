@@ -6,7 +6,8 @@
 #include "CitaMedica.h" //llama a la clase para la composicion
 #include <iostream>
 #include <random>
-#include <unordered_set>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 namespace {
@@ -25,50 +26,35 @@ namespace {
 
 
 //Inicializa los valores de la clase
-Paciente::Paciente(string nombre, int edad, long long numeroCelular) {
+Paciente::Paciente(const string& nombre, int edad, long long numeroCelular) {
     this->nombre = nombre;
     this->edad = edad;
-    this->numeroCelular=numeroCelular;
-    numeroCitas=0;
-    citas.empty();
-    ID = generarId();
+    this->numeroCelular = numeroCelular;
+    this->ID = generarId();
 }
 
 //Getters
-string Paciente::getNombre() {
+string Paciente::getNombre() const {
     return nombre;
 }
-int Paciente::getEdad() {
+int Paciente::getEdad() const {
     return edad;
 }
 
-string Paciente::getID() {
+string Paciente::getID() const {
     return ID;
 }
 
-int Paciente::getNumeroCitas() {
-    return numeroCitas;
+long long Paciente::getNumero() const {
+    return numeroCelular;
 }
 
-void Paciente::getCita(int numeroCita) {
-    if (numeroCitas > 0) {
-        numeroCita--;
-        if (numeroCita < 0 or numeroCita>numeroCitas) { /*no admite numeros negativos
-                                                            o que sean mayores al numero de citas ligadas al paciente*/
-            cout<<"\nNumero de cita invalido"<<endl;
-        }
-        else {
-            cout<<"Paciente: "<<nombre<<" ("<<ID<<")"<<endl;
-            citas.at(numeroCita).mostrar();
-        }
-    }
-    else {
-        cout<<"\nEl paciente no tiene citas registradas"<<endl;
-    }
+int Paciente::getNumeroCitas() const {
+    return (int)citas.size();
 }
 
 //Setters
-void Paciente::setNombre(string nombre) {
+void Paciente::setNombre(const string& nombre) {
     if (nombre.empty()) { //evita que el nuevo nombre este vacio
         cout<<"Error. Ingresa un nombre valido"<<endl;
     } else this->nombre = nombre;
@@ -85,31 +71,98 @@ void Paciente::setEdad(int edad_) {
 // }
 
 void Paciente::setNumero(long long telefono) {
-    numeroCelular=telefono;
+    this->numeroCelular = telefono;
 }
 
 //Metodos especificos
-void Paciente::agregarCita(CitaMedica nuevaCita) {
+void Paciente::agregarCita(const CitaMedica& nuevaCita) {
     citas.push_back(nuevaCita);
     cout << "Cita de " << getNombre()<< " agregada" << endl;
-    numeroCitas++;
 }
 
-void Paciente::mostrar(){
+void Paciente::mostrar() const {
     cout << "\nNombre: " << getNombre() << endl;
     cout << "Edad: " << getEdad() << endl;
     cout << "ID: " << getID() << endl;
+    cout << "Telefono: " << getNumero() << endl;
 
     if (citas.size() > 0) {
-        cout << "Citas medicas: "<< numeroCitas << endl;
+        cout << "Citas medicas: "<< getNumeroCitas() << endl;
     } else {
         cout<<"No hay citas medicas registradas"<<endl;
     }
 }
 
-void Paciente::cancelarCita(int indice) {
-    citas.erase(citas.begin()+indice);
-    cout<<"La cita "<<indice<<"ha sido eliminada"<<endl;
-    numeroCitas--;
+void Paciente::mostrarCita(int numeroCita) const {
+    int indice;
+
+    if (getNumeroCitas() == 0) {
+        cout << "El paciente no tiene citas registradas" << endl;
+        return;
+    }
+
+    if (numeroCita < 1 or numeroCita > getNumeroCitas()) {
+        cout << "Numero de cita invalido" << endl;
+        return;
+    }
+
+    indice = numeroCita - 1;
+    cout << "Paciente: " << nombre << " (" << ID << ")" << endl;
+    citas.at(indice).mostrar();
+}
+
+void Paciente::mostrarCitas() const {
+    int i;
+
+    if (getNumeroCitas() == 0) {
+        cout << "No hay citas registradas" << endl;
+        return;
+    }
+
+    cout << "Lista de citas (" << getNumeroCitas() << "):" << endl;
+    for (i = 0; i < (int)citas.size(); i++) {
+        cout << "Cita: " << (i + 1) << endl;
+        citas[i].mostrar();
+    }
+}
+
+void Paciente::cancelarCita(int numeroCita) {
+    int indice;
+
+    if (getNumeroCitas() == 0) {
+        cout << "Error: no hay citas para eliminar" << endl;
+        return;
+    }
+
+    if (numeroCita < 1 or numeroCita > getNumeroCitas()) {
+        cout << "Error: numero de cita invalido" << endl;
+        return;
+    }
+
+    indice = numeroCita - 1;
+    citas.erase(citas.begin() + indice);
+    cout << "La cita: " << numeroCita << " ha sido eliminada" << endl;
+}
+
+void Paciente::cambiarEstadoCita(int numeroCita, int nuevoEstado) {
+    int indice;
+
+    if (getNumeroCitas() == 0) {
+        cout << "Error: el paciente no tiene citas registradas" << endl;
+        return;
+    }
+
+    if (numeroCita < 1 or numeroCita > getNumeroCitas()) {
+        cout << "Error: numero de cita invalido" << endl;
+        return;
+    }
+
+    if (nuevoEstado < 1 or nuevoEstado > 3) {
+        cout << "Error: estado invalido (usa 1, 2 o 3)" << endl;
+        return;
+    }
+
+    indice = numeroCita - 1;
+    citas[indice].setEstado(nuevoEstado);
 }
 

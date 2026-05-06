@@ -4,40 +4,46 @@
 
 #include "CitaMedica.h"
 #include <iostream>
-#include <utility>
 using namespace std;
 
-CitaMedica::CitaMedica(year_month_day fecha, const string& motivo) {
-    this->fecha = fecha;
+CitaMedica::CitaMedica(const year_month_day& fecha, const string& motivo) {
+    // si la fecha es invalida, dejo una por defecto para no guardar basura
+    if (!fecha.ok()) {
+        cout << "Error. Fecha invalida" << endl;
+        this->fecha = year{2026} / month{1} / day{1};
+    } else {
+        this->fecha = fecha;
+    }
 
     if (motivo.empty()) {
-        cout << "Error. Campo obligatoriio" << endl;
-    } else {this->motivo = motivo;}
+        cout << "Error. Campo obligatorio" << endl;
+        this->motivo = "Sin motivo";
+    } else {
+        this->motivo = motivo;
+    }
 
-    estadoCita=1; //por defecto la cita esta en espera
-
+    estadoCita = 1; //por defecto la cita esta en espera
 }
 
-CitaMedica::~CitaMedica() = default;
 
 //getters
-year_month_day CitaMedica::getFechaIngreso() {
+year_month_day CitaMedica::getFechaIngreso() const {
     return fecha;
 }
 
-string CitaMedica::getMotivo() {
+string CitaMedica::getMotivo() const {
     return motivo;
 }
 
-int CitaMedica::getEstado() {
+int CitaMedica::getEstado() const {
     return estadoCita;
 }
 
 //setters
 void CitaMedica::setMotivo(const string& motivo) {
     if (motivo.empty()) {
-        cout << "Error. Campo obligatoriio" << endl;
-    }else {this->motivo = motivo;}
+        cout << "Error. Campo obligatorio" << endl;
+    } else {this->motivo = motivo;}
 }
 
 void CitaMedica::setFecha(const year_month_day &fecha) {
@@ -47,13 +53,21 @@ void CitaMedica::setFecha(const year_month_day &fecha) {
 }
 
 void CitaMedica::setEstado(int estado) {
-    if (estado != 3) {
-        estadoCita=estado;
+    // si ya esta finalizada, no la dejo cambiar
+    if (estadoCita == 3) {
+        cout << "Error: la cita ya esta finalizada" << endl;
+        return;
     }
-    cout<<"Error: cita finalizada"<<endl;
+
+    if (estado < 1 or estado > 3) {
+        cout << "Error: estado invalido" << endl;
+        return;
+    }
+
+    estadoCita = estado;
 }
 
-void CitaMedica::mostrar() {
+void CitaMedica::mostrar() const {
     cout<<"Fecha: "<<getFechaIngreso()<<endl;
     cout<<"Motivo: "<<getMotivo()<<endl;
 
