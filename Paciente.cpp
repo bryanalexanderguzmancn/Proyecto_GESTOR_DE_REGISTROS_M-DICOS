@@ -49,6 +49,10 @@ long long Paciente::getNumero() const {
     return numeroCelular;
 }
 
+const vector<CitaMedica>& Paciente::getCitas() const {
+    return citas;
+}
+
 int Paciente::getNumeroCitas() const {
     return (int)citas.size();
 }

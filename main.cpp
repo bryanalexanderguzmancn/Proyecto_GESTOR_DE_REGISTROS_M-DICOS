@@ -1,11 +1,80 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <fstream>
 #include "CitaMedica.h"
 #include "Paciente.h"
 using namespace std;
 
 // funciones
+
+void cargarBaseDeDatos(vector<Paciente>& lista, const string& nombreArc) {
+    ifstream archivo(nombreArc, ios::in);
+    if (not archivo.is_open()) {
+        cout << "Error: archivo inexistente" << endl;
+    }
+
+    string nombre, apellido, motivo;
+    long long telefono;
+    int numCitas, dia, mes, anio, estado, edad;
+    char slash;
+
+    while (archivo>>nombre>>ws>>apellido>>ws>>edad>>ws>>telefono>>ws>>numCitas) {
+
+        string nombreCompleto=nombre+ " " +apellido;
+
+        Paciente nPaciente(nombreCompleto, edad, telefono);
+
+        if (numCitas > 0) {
+            archivo>>dia>>slash>>mes>>slash>>anio;
+            archivo>>estado;
+            archivo>>ws;
+            getline(archivo, motivo);
+            year_month_day fecha = year{anio} / month{(unsigned)mes} / day{(unsigned)dia};
+            CitaMedica nuevaCita(fecha, motivo);
+            if (estado!=1) {
+                nuevaCita.setEstado(estado);
+            }
+            nPaciente.agregarCita(nuevaCita);
+        }
+        lista.push_back(nPaciente);
+    }
+    cout<<"Datos cargados"<<endl;
+}
+// void cargarBaseDeDatos(vector<Paciente>& lista, const string& nombreArc) {
+//     ifstream archivo(nombreArc, ios::in);
+//     if (not archivo.is_open()) {
+//         cout << "Error: archivo inexistente" << endl;
+//         return;
+//     }
+//
+//     string nombre, apellido, motivo;
+//     long long telefono;
+//     int numCitas, dia, mes, anio, estado, edad;
+//     char slash;
+//
+//     while (archivo>>nombre>>apellido>>edad>>telefono>>numCitas) {
+//
+//         string nombreCompleto=nombre+ " " +apellido;
+//         Paciente nPaciente(nombreCompleto, edad, telefono);
+//
+//
+//         if (numCitas>0) {
+//             archivo>>dia>>slash>>mes>>slash>>anio;
+//             archivo>>estado;
+//             archivo>>ws;
+//             getline(archivo, motivo);
+//             year_month_day fecha = year{anio} / month{(unsigned)mes} / day{(unsigned)dia};
+//             CitaMedica nuevaCita(fecha, motivo);
+//             if (estado!=1) {
+//                 nuevaCita.setEstado(estado);
+//             }
+//             nPaciente.agregarCita(nuevaCita);
+//         }
+//
+//         lista.push_back(nPaciente);
+//     }
+// }
 
 void registrarCita(Paciente &paciente) {
     string motivo;
@@ -35,15 +104,13 @@ void registrarCita(Paciente &paciente) {
     paciente.agregarCita(CitaMedica(fecha, motivo));
 }
 
-int buscarPaciente(const vector<Paciente>& consultorio, const string& texto) {
-    int i;
-
-    for (i = 0; i < (int)consultorio.size(); i++) {
-        if (texto == consultorio[i].getID() or texto == consultorio[i].getNombre()) {
+int buscarPaciente(const vector<Paciente>& consultorio, const string& pacienteBuscado) {
+    for (int i = 0; i < (int)consultorio.size(); i++) {
+        if (pacienteBuscado == consultorio[i].getID() or pacienteBuscado == consultorio[i].getNombre()) {
             return i;
         }
     }
-    return -1;
+    return -1; //evitar una discrepancia si i=1
 }
 
 int main() {
@@ -53,7 +120,8 @@ int main() {
     // datos de prueba
     consultorio1.push_back(Paciente("Adolfo Villanueva", 20, 2761101670));
     consultorio1.push_back(Paciente("Bryan Guzman", 32, 2761101980));
-    consultorio1.at(1).agregarCita(CitaMedica(year{2026}/month{5}/day{10},"Cancer"));
+    consultorio1.at(1).agregarCita(CitaMedica(year{2026}/month{5}/day{10},"gripa"));
+    cargarBaseDeDatos(consultorio1, "C:\\Users\\bryan\\CLionProjects\\proyectoGestorMedico\\cmake-build-debug\\citasMedicas.txt");
 
     do {
         cout << "\n*** Registro de Citas medicas ***\n";
@@ -86,7 +154,7 @@ int main() {
 
                 consultorio1.push_back(Paciente(nombre, edad, numeroCelular));
 
-                cout<<"Paciente registrado. ID: "<< consultorio1.back().getID() << endl;
+                cout<<"Paciente registrado \nID: "<< consultorio1.back().getID() << endl;
                 cout<<"1. Registrar cita\n2. Salir"<<endl;
                 cin>>opcionIndice;
 
@@ -98,16 +166,16 @@ int main() {
             }
 
             case 2: {
-                string textoBusqueda;
+                string pacienteBuscado;
                 int indicePaciente;
                 int opcionIndice;
 
                 cout << "Ingresa el ID o nombre del paciente:"  << endl;
-                getline(cin >> ws, textoBusqueda);
+                getline(cin >> ws, pacienteBuscado);
 
-                indicePaciente = buscarPaciente(consultorio1, textoBusqueda);
+                indicePaciente = buscarPaciente(consultorio1, pacienteBuscado);
                 if (indicePaciente == -1) {
-                    cout << "No existe el paciente: " << textoBusqueda << endl;
+                    cout << "No existe el paciente: " << pacienteBuscado << endl;
                     break;
                 }
 
