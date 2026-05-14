@@ -30,7 +30,7 @@ public:
 
 
     //getters
-    year_month_day getFechaIngreso() const;
+    year_month_day getFecha() const;
     string getMotivo() const;
     int getEstado() const;
 

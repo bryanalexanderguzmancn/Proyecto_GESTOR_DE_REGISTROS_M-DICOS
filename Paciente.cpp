@@ -53,6 +53,10 @@ const vector<CitaMedica>& Paciente::getCitas() const {
     return citas;
 }
 
+year_month_day Paciente::getFechaCitas(int indice) const {
+    return getCitas().at(indice).getFecha();
+}
+
 int Paciente::getNumeroCitas() const {
     return (int)citas.size();
 }

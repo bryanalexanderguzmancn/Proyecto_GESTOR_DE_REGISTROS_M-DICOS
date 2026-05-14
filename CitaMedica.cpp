@@ -27,7 +27,7 @@ CitaMedica::CitaMedica(const year_month_day& fecha, const string& motivo) {
 
 
 //getters
-year_month_day CitaMedica::getFechaIngreso() const {
+year_month_day CitaMedica::getFecha() const {
     return fecha;
 }
 
@@ -68,7 +68,7 @@ void CitaMedica::setEstado(int estado) {
 }
 
 void CitaMedica::mostrar() const {
-    cout<<"Fecha: "<<getFechaIngreso()<<endl;
+    cout<<"Fecha: "<<getFecha()<<endl;
     cout<<"Motivo: "<<getMotivo()<<endl;
 
     if (getEstado()==1) {

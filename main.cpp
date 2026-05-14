@@ -41,40 +41,39 @@ void cargarBaseDeDatos(vector<Paciente>& lista, const string& nombreArc) {
     }
     cout<<"Datos cargados"<<endl;
 }
-// void cargarBaseDeDatos(vector<Paciente>& lista, const string& nombreArc) {
-//     ifstream archivo(nombreArc, ios::in);
-//     if (not archivo.is_open()) {
-//         cout << "Error: archivo inexistente" << endl;
-//         return;
-//     }
-//
-//     string nombre, apellido, motivo;
-//     long long telefono;
-//     int numCitas, dia, mes, anio, estado, edad;
-//     char slash;
-//
-//     while (archivo>>nombre>>apellido>>edad>>telefono>>numCitas) {
-//
-//         string nombreCompleto=nombre+ " " +apellido;
-//         Paciente nPaciente(nombreCompleto, edad, telefono);
-//
-//
-//         if (numCitas>0) {
-//             archivo>>dia>>slash>>mes>>slash>>anio;
-//             archivo>>estado;
-//             archivo>>ws;
-//             getline(archivo, motivo);
-//             year_month_day fecha = year{anio} / month{(unsigned)mes} / day{(unsigned)dia};
-//             CitaMedica nuevaCita(fecha, motivo);
-//             if (estado!=1) {
-//                 nuevaCita.setEstado(estado);
-//             }
-//             nPaciente.agregarCita(nuevaCita);
-//         }
-//
-//         lista.push_back(nPaciente);
-//     }
-// }
+
+void crearReporte(vector<Paciente>& lista, const string& nombreArc) {
+    ofstream reporte(nombreArc, ios::out);
+
+    string nombre, apellido, motivo;
+    long long telefono;
+    int numCitas, estado, edad;
+    char slash;
+
+    reporte<<setw(10)<<"------------------Reporte de Pacientes y Citas medicas------------------"<<endl;
+    reporte<<"============================================================================================================"<<endl;
+    reporte<<"Nombre"<<setw(22)<<"|Edad"<<setw(17)<<"|Numero"<<setw(22)<<"|Numero de citas"<<setw(10)<<"|fecha"<<setw(17)<<"|Estado"<<setw(17)<<"|Motivo"<<setw(17)<<endl;
+    reporte<<"============================================================================================================"<<endl;
+    for (int i = 0; i < (int)lista.size(); i++) {
+        nombre = lista[i].getNombre();
+        telefono=lista[i].getNumero();
+        edad=lista[i].getEdad();
+        numCitas=lista[i].getNumeroCitas();
+        reporte<<nombre<<setw(10)<<edad<<setw(20)<<telefono<<setw(10)<<numCitas<<setw(10);
+
+        if (numCitas>0) {
+            for (int j = 0; j < numCitas; j++) {
+                year_month_day fecha = lista[i].getFechaCitas(j);
+                estado=lista[i].getCitas().at(j).getEstado();
+                motivo=lista[i].getCitas().at(j).getMotivo();
+
+                reporte<<setw(30)<<fecha<<setw(10)<<estado<<setw(20)<<motivo<<endl;
+            }
+
+         }
+        reporte<<endl;
+    }
+}
 
 void registrarCita(Paciente &paciente) {
     string motivo;
@@ -128,7 +127,7 @@ int main() {
         cout << "1. Agregar paciente\n";
         cout << "2. Buscar paciente\n";
         cout << "3. Lista de pacientes\n";
-        cout << "4. Salir\n";
+        cout << "4. Crear reporte y Salir\n";
         cout << "Opcion: ";
 
         cin >> opcion;
@@ -270,6 +269,9 @@ int main() {
             }
 
             case 4:
+                crearReporte(consultorio1, "reporte1");
+                cout << "Creando reporte..." << endl;
+                cout << "Reporte creado" << endl;
                 cout << "Saliendo" << endl;
                 break;
 

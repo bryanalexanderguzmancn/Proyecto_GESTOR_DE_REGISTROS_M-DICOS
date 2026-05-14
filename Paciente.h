@@ -30,10 +30,12 @@ public:
     int getEdad() const;
     string getID() const;
     long long getNumero() const;
+    const vector<CitaMedica>& getCitas() const;
 
     int getNumeroCitas() const;
     void mostrarCita(int numeroCita) const;
     void mostrarCitas() const;
+    year_month_day getFechaCitas(int indice) const;
 
     //setters
     void setNombre(const string& nombre);
